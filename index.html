@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameZone – Mini Games by Swagat Sigdel</title>
+  <meta name="description" content="A premium mini-game portal with 5 games: Number Guessing, Rock Paper Scissors, Tic-Tac-Toe, Memory Match and Simon Says." />
+  <meta name="theme-color" content="#6366f1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ─── Header ─── -->
+  <header id="app-header">
+    <div class="header-inner">
+      <button class="brand-btn" id="homeBtn" aria-label="Go to home">
+        <span class="brand-icon" aria-hidden="true">🎮</span>
+        <div class="brand-text">
+          <span class="brand-name">GameZone</span>
+          <span class="brand-by">By Swagat Sigdel</span>
+        </div>
+      </button>
+      <div class="header-actions">
+        <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle dark/light mode">☀️</button>
+        <button id="installBtn" class="icon-btn" hidden aria-label="Install app" title="Install as app">📲</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Views ─── -->
+  <div id="views">
+
+    <!-- Hub -->
+    <main id="view-hub" class="view active" aria-label="Game hub">
+
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-badge">✨ 5 Games Inside</div>
+          <h1 class="hero-title"><span class="gradient-text">Play &amp; Win</span></h1>
+          <p class="hero-sub">Handcrafted mini-games to challenge your mind</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="floating-emoji e1">🎯</div>
+          <div class="floating-emoji e2">✊</div>
+          <div class="floating-emoji e3">⭕</div>
+          <div class="floating-emoji e4">🃏</div>
+          <div class="floating-emoji e5">🔮</div>
+        </div>
+      </section>
+
+      <section class="games-section" aria-label="Available games">
+        <h2 class="section-title">Choose Your Game</h2>
+        <div class="game-grid" role="list">
+
+          <article class="game-card" role="listitem" data-game="number" tabindex="0">
+            <div class="card-glow" style="--glow:#00d4ff" aria-hidden="true"></div>
+            <div class="card-icon" aria-hidden="true">🎯</div>
+            <h3 class="card-title">Number Guessing</h3>
+            <p class="card-desc">Guess the secret number with warm/cold hints. Easy to Hard.</p>
+            <div class="card-tags"><span class="tag">Logic</span><span class="tag">Hints</span><span class="tag">Streaks</span></div>
+            <button class="play-btn" data-game="number" aria-label="Play Number Guessing"><span>Play</span><span class="play-arrow" aria-hidden="true">→</span></button>
+          </article>
+
+          <article class="game-card" role="listitem" data-game="rps" tabindex="0">
+            <div class="card-glow" style="--glow:#a855f7" aria-hidden="true"></div>
+            <div class="card-icon" aria-hidden="true">✊</div>
+            <h3 class="card-title">Rock Paper Scissors</h3>
+            <p class="card-desc">Classic hand battle vs the computer. Win streaks tracked.</p>
+            <div class="card-tags"><span class="tag">Classic</span><span class="tag">vs Bot</span></div>
+            <button class="play-btn" data-game="rps" aria-label="Play Rock Paper Scissors"><span>Play</span><span class="play-arrow" aria-hidden="true">→</span></button>
+          </article>
+
+          <article class="game-card" role="listitem" data-game="ttt" tabindex="0">
+            <div class="card-glow" style="--glow:#22c55e" aria-hidden="true"></div>
+            <div class="card-icon" aria-hidden="true">⭕</div>
+            <h3 class="card-title">Tic-Tac-Toe</h3>
+            <p class="card-desc">2-player local or battle against a smart unbeatable AI.</p>
+            <div class="card-tags"><span class="tag">2-Player</span><span class="tag">vs AI</span></div>
+            <button class="play-btn" data-game="ttt" aria-label="Play Tic-Tac-Toe"><span>Play</span><span class="play-arrow" aria-hidden="true">→</span></button>
+          </article>
+
+          <article class="game-card" role="listitem" data-game="memory" tabindex="0">
+            <div class="card-glow" style="--glow:#f97316" aria-hidden="true"></div>
+            <div class="card-icon" aria-hidden="true">🃏</div>
+            <h3 class="card-title">Memory Match</h3>
+            <p class="card-desc">Flip cards and find emoji pairs. Beat your best score!</p>
+            <div class="card-tags"><span class="tag">Memory</span><span class="tag">Speed</span></div>
+            <button class="play-btn" data-game="memory" aria-label="Play Memory Match"><span>Play</span><span class="play-arrow" aria-hidden="true">→</span></button>
+          </article>
+
+          <article class="game-card" role="listitem" data-game="simon" tabindex="0">
+            <div class="card-glow" style="--glow:#ec4899" aria-hidden="true"></div>
+            <div class="card-icon" aria-hidden="true">🔮</div>
+            <h3 class="card-title">Simon Says</h3>
+            <p class="card-desc">Watch the colour pattern, then repeat it. How far can you go?</p>
+            <div class="card-tags"><span class="tag">Pattern</span><span class="tag">Reflex</span></div>
+            <button class="play-btn" data-game="simon" aria-label="Play Simon Says"><span>Play</span><span class="play-arrow" aria-hidden="true">→</span></button>
+          </article>
+
+        </div>
+      </section>
+
+    </main><!-- /hub -->
+
+    <!-- ─── Number Guessing ─── -->
+    <section id="view-number" class="view game-view" aria-label="Number Guessing Game" style="--accent:#00d4ff;--accent-rgb:0,212,255">
+      <div class="gv-header">
+        <button class="back-btn" aria-label="Back to games">‹ Games</button>
+        <div class="gv-title-row"><span aria-hidden="true">🎯</span><h2>Number Guessing</h2></div>
+        <div class="score-pill" id="ng-streak">🔥 0 wins</div>
+      </div>
+      <div class="gv-body">
+        <p class="range-hint" id="ng-rangeHint" aria-live="polite"></p>
+        <select id="ng-difficulty" class="game-select" aria-label="Select difficulty level">
+          <option value="easy">🟢 Easy (1–50)</option>
+          <option value="medium" selected>🟡 Medium (1–100)</option>
+          <option value="hard">🔴 Hard (1–500)</option>
+        </select>
+        <input type="number" id="ng-input" class="game-input" placeholder="Enter your guess…" min="1" max="100" autocomplete="off" inputmode="numeric" aria-label="Enter a number" aria-describedby="ng-rangeHint ng-feedback" />
+        <div class="btn-row">
+          <button id="ng-submitBtn" class="btn-primary" type="button" disabled aria-label="Submit guess">Submit</button>
+          <button id="ng-resetBtn" class="btn-secondary" type="button" aria-label="New game">🔄 New Game</button>
+        </div>
+        <p id="ng-feedback" class="feedback" aria-live="assertive" aria-atomic="true"></p>
+        <p id="ng-hint" class="hint-msg" aria-live="polite"></p>
+        <div id="ng-stats" class="stats-box" aria-label="Game statistics"></div>
+        <details id="ng-histDetails" class="history-details">
+          <summary>📜 Game History</summary>
+          <div id="ng-history" class="history-list"></div>
+        </details>
+        <div class="ghost-row">
+          <button id="ng-resetStats" class="ghost-btn" type="button">🗑️ Clear Stats</button>
+          <button id="ng-sound" class="ghost-btn" type="button">🔊 Sound On</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Rock Paper Scissors ─── -->
+    <section id="view-rps" class="view game-view" aria-label="Rock Paper Scissors" style="--accent:#a855f7;--accent-rgb:168,85,247">
+      <div class="gv-header">
+        <button class="back-btn" aria-label="Back to games">‹ Games</button>
+        <div class="gv-title-row"><span aria-hidden="true">✊</span><h2>Rock Paper Scissors</h2></div>
+        <div class="score-pill" id="rps-scorePill">0W / 0L / 0D</div>
+      </div>
+      <div class="gv-body">
+        <div class="rps-arena">
+          <div class="rps-side">
+            <div class="rps-emoji" id="rps-player" aria-label="Your choice">❓</div>
+            <span class="rps-label">You</span>
+          </div>
+          <div class="rps-vs" aria-hidden="true">VS</div>
+          <div class="rps-side">
+            <div class="rps-emoji" id="rps-bot" aria-label="Computer's choice">❓</div>
+            <span class="rps-label">CPU</span>
+          </div>
+        </div>
+        <p id="rps-result" class="rps-result" aria-live="assertive" aria-atomic="true"></p>
+        <div class="rps-choices" role="group" aria-label="Make your choice">
+          <button class="rps-btn" data-choice="rock" aria-label="Choose Rock">✊<span>Rock</span></button>
+          <button class="rps-btn" data-choice="paper" aria-label="Choose Paper">🖐<span>Paper</span></button>
+          <button class="rps-btn" data-choice="scissors" aria-label="Choose Scissors">✌️<span>Scissors</span></button>
+        </div>
+        <button id="rps-reset" class="ghost-btn mt" type="button">🔄 Reset Score</button>
+      </div>
+    </section>
+
+    <!-- ─── Tic-Tac-Toe ─── -->
+    <section id="view-ttt" class="view game-view" aria-label="Tic-Tac-Toe" style="--accent:#22c55e;--accent-rgb:34,197,94">
+      <div class="gv-header">
+        <button class="back-btn" aria-label="Back to games">‹ Games</button>
+        <div class="gv-title-row"><span aria-hidden="true">⭕</span><h2>Tic-Tac-Toe</h2></div>
+        <div class="score-pill" id="ttt-scorePill">X: 0 – O: 0 – D: 0</div>
+      </div>
+      <div class="gv-body">
+        <div class="mode-switcher" role="group" aria-label="Game mode">
+          <button class="mode-btn active" data-mode="ai" aria-pressed="true">🤖 vs AI</button>
+          <button class="mode-btn" data-mode="2p" aria-pressed="false">👥 2 Players</button>
+        </div>
+        <p id="ttt-status" class="ttt-status" aria-live="polite" aria-atomic="true"></p>
+        <div id="ttt-board" class="ttt-board" role="grid" aria-label="Tic-Tac-Toe board"></div>
+        <button id="ttt-reset" class="btn-secondary mt" type="button">🔄 New Game</button>
+      </div>
+    </section>
+
+    <!-- ─── Memory Match ─── -->
+    <section id="view-memory" class="view game-view" aria-label="Memory Match" style="--accent:#f97316;--accent-rgb:249,115,22">
+      <div class="gv-header">
+        <button class="back-btn" aria-label="Back to games">‹ Games</button>
+        <div class="gv-title-row"><span aria-hidden="true">🃏</span><h2>Memory Match</h2></div>
+        <div class="score-pill" id="mem-best">Best: –</div>
+      </div>
+      <div class="gv-body">
+        <div class="mem-bar">
+          <span>Pairs: <strong id="mem-pairs">0/8</strong></span>
+          <span>Moves: <strong id="mem-moves">0</strong></span>
+          <span>Time: <strong id="mem-time">0s</strong></span>
+        </div>
+        <div id="mem-board" class="mem-board" role="grid" aria-label="Memory card grid"></div>
+        <button id="mem-reset" class="btn-secondary mt" type="button">🔄 New Game</button>
+      </div>
+    </section>
+
+    <!-- ─── Simon Says ─── -->
+    <section id="view-simon" class="view game-view" aria-label="Simon Says" style="--accent:#ec4899;--accent-rgb:236,72,153">
+      <div class="gv-header">
+        <button class="back-btn" aria-label="Back to games">‹ Games</button>
+        <div class="gv-title-row"><span aria-hidden="true">🔮</span><h2>Simon Says</h2></div>
+        <div class="score-pill" id="simon-best">Best: 0</div>
+      </div>
+      <div class="gv-body">
+        <div class="simon-info">
+          <div class="simon-level-badge">Level <span id="simon-level">0</span></div>
+          <p id="simon-status" class="simon-status" aria-live="polite" aria-atomic="true">Press Start to play!</p>
+        </div>
+        <div class="simon-grid" role="group" aria-label="Simon colour buttons">
+          <button class="simon-btn" id="simon-0" data-idx="0" aria-label="Red button"></button>
+          <button class="simon-btn" id="simon-1" data-idx="1" aria-label="Blue button"></button>
+          <button class="simon-btn" id="simon-2" data-idx="2" aria-label="Green button"></button>
+          <button class="simon-btn" id="simon-3" data-idx="3" aria-label="Yellow button"></button>
+        </div>
+        <button id="simon-start" class="btn-primary mt" type="button">🎮 Start</button>
+      </div>
+    </section>
+
+  </div><!-- /views -->
+
+  <!-- ─── Footer ─── -->
+  <footer id="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <span class="footer-credit">Made with ❤️ &nbsp;·&nbsp; <strong>By Swagat Sigdel</strong></span>
+      <span class="footer-copy">GameZone © 2025</span>
+    </div>
+  </footer>
+
+</div><!-- /app -->
+
+<!-- Shared confetti container (used by all games) -->
+<div id="confetti-box" class="win-celebration" hidden aria-hidden="true"></div>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
