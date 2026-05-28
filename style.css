@@ -127,7 +127,7 @@ body.light #app-header { background: rgba(240,240,255,.88); }
 .brand-name  { font-family:var(--font-head); font-size:1.05rem; font-weight:700; color:var(--text); line-height:1.1; }
 .brand-by    { font-size:.68rem; color:var(--text-muted); font-weight:500; line-height:1.2; }
 
-.header-actions { display:flex; align-items:center; gap:.5rem; }
+.header-actions { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; justify-content:flex-end; }
 
 .icon-btn {
   width: 40px; height: 40px;
@@ -144,6 +144,53 @@ body.light #app-header { background: rgba(240,240,255,.88); }
 }
 .icon-btn:hover  { background: var(--surface-2); transform: scale(1.06); }
 .icon-btn:active { transform: scale(.94); }
+
+.auth-btn {
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  font-size: .86rem;
+  font-weight: 600;
+  padding: 0 .9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .1s, background var(--trans), opacity var(--trans);
+}
+.auth-btn:hover { transform: translateY(-1px); }
+.auth-btn:active { transform: translateY(0); }
+
+.auth-btn-secondary {
+  height: 34px;
+  font-size: .78rem;
+  padding: 0 .75rem;
+}
+
+.google-user {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .2rem .25rem .2rem .45rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(var(--primary-rgb), .08);
+}
+.google-user-photo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.google-user-name {
+  font-size: .82rem;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /* ─── Views ──────────────────────────────────────────────────────────────────── */
 #views { flex: 1; }
@@ -873,6 +920,9 @@ body.light #app-header { background: rgba(240,240,255,.88); }
 
 /* ─── Mobile ─────────────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
+  .header-actions      { width:100%; justify-content:flex-end; }
+  .google-user-name    { max-width: 90px; }
+
   /* Layout */
   .hero             { padding:1.75rem 1rem 1.25rem; min-height:200px; }
   .hero-title       { font-size:clamp(2rem,10vw,3rem); }

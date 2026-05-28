@@ -30,6 +30,149 @@ function toggleTheme() {
   localStorage.setItem(THEME_KEY, !isDark ? 'dark' : 'light');
 }
 
+// ─── Google Login (Google Identity Services) ────────────────────────────────
+// Set your Client ID in index.html:
+// window.GAMEZONE_GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
+const GOOGLE_CLIENT_PLACEHOLDER = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = String(window.GAMEZONE_GOOGLE_CLIENT_ID || '').trim();
+const GOOGLE_USER_KEY = 'gz-google-user';
+let googleAuthInitAttempts = 0;
+
+function initGoogleAuth() {
+  const fallbackBtn = document.getElementById('googleSignInFallback');
+  const signOutBtn = document.getElementById('googleSignOutBtn');
+  const btnHost = document.getElementById('googleSignInBtn');
+  const user = load(GOOGLE_USER_KEY, null);
+  googleUpdateAuthUI(user);
+
+  if (fallbackBtn && !fallbackBtn.dataset.bound) {
+    fallbackBtn.dataset.bound = '1';
+    fallbackBtn.addEventListener('click', () => {
+      if (!isGoogleClientConfigured()) {
+        showToast('Add your Google client_id in index.html to enable login.');
+      } else {
+        showToast('Google Sign-In is still loading. Please try again.');
+        initGoogleAuth();
+      }
+    });
+  }
+
+  if (signOutBtn && !signOutBtn.dataset.bound) {
+    signOutBtn.dataset.bound = '1';
+    signOutBtn.addEventListener('click', signOutGoogle);
+  }
+
+  if (!isGoogleClientConfigured()) {
+    if (btnHost) {
+      btnHost.hidden = true;
+      btnHost.setAttribute('aria-hidden', 'true');
+    }
+    return;
+  }
+
+  if (!window.google?.accounts?.id) {
+    if (googleAuthInitAttempts < 20) {
+      googleAuthInitAttempts += 1;
+      setTimeout(initGoogleAuth, 250);
+    }
+    return;
+  }
+
+  if (!btnHost) return;
+  if (fallbackBtn) fallbackBtn.hidden = true;
+
+  window.google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential
+  });
+
+  btnHost.hidden = false;
+  btnHost.setAttribute('aria-hidden', 'false');
+  window.google.accounts.id.renderButton(btnHost, {
+    type: 'standard',
+    text: 'signin_with',
+    shape: 'pill',
+    size: 'large',
+    theme: 'outline'
+  });
+}
+
+function isGoogleClientConfigured() {
+  return GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== GOOGLE_CLIENT_PLACEHOLDER;
+}
+
+function handleGoogleCredential(response) {
+  const payload = parseGoogleJwt(response?.credential);
+  if (!payload) {
+    showToast('Google sign-in failed. Please try again.');
+    return;
+  }
+
+  const user = {
+    givenName: payload.given_name || payload.name || 'Player',
+    fullName: payload.name || '',
+    email: payload.email || '',
+    picture: payload.picture || ''
+  };
+  save(GOOGLE_USER_KEY, user);
+  googleUpdateAuthUI(user);
+  showToast(`Welcome, ${user.givenName}!`);
+}
+
+function signOutGoogle() {
+  const user = load(GOOGLE_USER_KEY, null);
+  try { localStorage.removeItem(GOOGLE_USER_KEY); } catch {}
+  googleUpdateAuthUI(null);
+  if (window.google?.accounts?.id) {
+    window.google.accounts.id.disableAutoSelect();
+    if (user?.email) window.google.accounts.id.revoke(user.email, () => {});
+  }
+  showToast('Signed out.');
+}
+
+function googleUpdateAuthUI(user) {
+  const signInWrap = document.getElementById('googleSignInWrap');
+  const userInfo = document.getElementById('googleUserInfo');
+  const userName = document.getElementById('googleUserName');
+  const userPhoto = document.getElementById('googleUserPhoto');
+  if (!signInWrap || !userInfo || !userName || !userPhoto) return;
+
+  if (user) {
+    signInWrap.hidden = true;
+    userInfo.hidden = false;
+    userName.textContent = user.givenName || user.fullName || 'Player';
+    if (user.picture) {
+      userPhoto.src = user.picture;
+      userPhoto.alt = `${userName.textContent}'s profile picture`;
+      userPhoto.hidden = false;
+    } else {
+      userPhoto.src = '';
+      userPhoto.alt = '';
+      userPhoto.hidden = true;
+    }
+    return;
+  }
+
+  signInWrap.hidden = false;
+  userInfo.hidden = true;
+  userName.textContent = '';
+  userPhoto.src = '';
+  userPhoto.alt = '';
+  userPhoto.hidden = true;
+}
+
+function parseGoogleJwt(token) {
+  if (!token) return null;
+  try {
+    const base64Url = token.split('.')[1];
+    if (!base64Url) return null;
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+  } catch {
+    return null;
+  }
+}
+
 // ─── Navigation ───────────────────────────────────────────────────────────────
 let currentView = 'hub';
 const viewEls = {};
@@ -1007,6 +1150,7 @@ function simonBeep(idx) {
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initNavigation();
+  initGoogleAuth();
 
   // Register service worker
   if ('serviceWorker' in navigator) {

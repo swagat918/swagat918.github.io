@@ -26,6 +26,15 @@
         </div>
       </button>
       <div class="header-actions">
+        <div id="googleSignInWrap">
+          <button id="googleSignInFallback" class="auth-btn" type="button">Sign in with Google</button>
+          <div id="googleSignInBtn" hidden aria-hidden="true"></div>
+        </div>
+        <div id="googleUserInfo" class="google-user" hidden>
+          <img id="googleUserPhoto" class="google-user-photo" src="" alt="" hidden />
+          <span id="googleUserName" class="google-user-name"></span>
+          <button id="googleSignOutBtn" class="auth-btn auth-btn-secondary" type="button">Sign out</button>
+        </div>
         <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle dark/light mode">☀️</button>
         <button id="installBtn" class="icon-btn" hidden aria-label="Install app" title="Install as app">📲</button>
       </div>
@@ -245,6 +254,9 @@
 <!-- Toast -->
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
+<!-- Set your OAuth Web Client ID here (Google Cloud Console) -->
+<script>window.GAMEZONE_GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';</script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="app.js"></script>
 </body>
 </html>
