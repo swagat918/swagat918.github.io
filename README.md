@@ -16,6 +16,7 @@ This repo is designed for GitHub Pages. Once Pages is enabled, open the site at 
 - Clean, modern styling and animations
 - Local stats/score tracking (per game)
 - **Theme toggle** (light/dark)
+- **Authentication gate** with Google login + phone OTP support (Firebase Auth)
 - **PWA-ready**: `manifest.json` + `service-worker.js` for install/offline support (where supported)
 
 ## Tech Stack
@@ -40,6 +41,26 @@ python -m http.server 8000
 ```
 Then open:
 - `http://localhost:8000`
+
+## Authentication Setup (Google + OTP)
+The app now uses Firebase Authentication on the frontend.
+
+1. Create a Firebase project and enable:
+   - **Google** sign-in provider
+   - **Phone** sign-in provider
+2. Add your local domain and production domain in Firebase authorized domains.
+3. In `/tmp/workspace/swagat918/swagat918.github.io/app.js`, set:
+
+```js
+window.GAMEZONE_FIREBASE_CONFIG = {
+  apiKey: 'YOUR_API_KEY',
+  authDomain: 'YOUR_PROJECT.firebaseapp.com',
+  projectId: 'YOUR_PROJECT_ID',
+  appId: 'YOUR_APP_ID'
+};
+```
+
+4. For phone OTP, complete Firebase reCAPTCHA setup and any required billing/SMS configuration in your Firebase project.
 
 ## How to Play (Controls)
 - **Number Guessing:** pick difficulty → enter guesses → use hints to find the number

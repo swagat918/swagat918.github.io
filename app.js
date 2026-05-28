@@ -1,11 +1,151 @@
 'use strict';
 
+window.GAMEZONE_FIREBASE_CONFIG = window.GAMEZONE_FIREBASE_CONFIG || null;
+
 /* ═══════════════════════════════════════════════════════════════════════════════
    GameZone – app.js
    Contains: Theme, Navigation, Toast, Confetti, Storage helpers,
              and 5 games: Number Guessing · Rock Paper Scissors · Tic-Tac-Toe
                           Memory Match · Simon Says
    ═══════════════════════════════════════════════════════════════════════════════ */
+
+// ─── Authentication (Firebase: Google + Phone OTP) ───────────────────────────
+const AUTH = {
+  firebaseReady: false,
+  auth: null,
+  recaptchaVerifier: null,
+  confirmationResult: null,
+};
+
+function initAuth() {
+  const authGate = document.getElementById('authGate');
+  const app = document.getElementById('app');
+  const msg = document.getElementById('authMessage');
+  const googleBtn = document.getElementById('googleSignInBtn');
+  const sendOtpBtn = document.getElementById('sendOtpBtn');
+  const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+  const otpSection = document.getElementById('otpSection');
+  const phoneInput = document.getElementById('phoneInput');
+  const otpInput = document.getElementById('otpInput');
+  const signOutBtn = document.getElementById('signOutBtn');
+  const userBadge = document.getElementById('userBadge');
+
+  const setAuthMessage = (text, isError = false) => {
+    if (!msg) return;
+    msg.textContent = text;
+    msg.classList.toggle('error', isError);
+  };
+
+  const toggleSignedInUI = user => {
+    const signedIn = Boolean(user);
+    if (authGate) authGate.hidden = signedIn;
+    if (app) app.hidden = !signedIn;
+    if (signOutBtn) signOutBtn.hidden = !signedIn;
+    if (userBadge) {
+      userBadge.hidden = !signedIn;
+      if (signedIn) {
+        userBadge.textContent = user.displayName || user.phoneNumber || user.email || 'Player';
+      }
+    }
+    if (!signedIn) {
+      AUTH.confirmationResult = null;
+      if (otpSection) otpSection.hidden = true;
+      if (otpInput) otpInput.value = '';
+      if (phoneInput) phoneInput.value = '';
+    }
+  };
+
+  const firebaseConfig = window.GAMEZONE_FIREBASE_CONFIG;
+  if (!window.firebase || !firebaseConfig) {
+    toggleSignedInUI(null);
+    setAuthMessage(
+      'Firebase auth is not configured. Add window.GAMEZONE_FIREBASE_CONFIG in app.js as described in README.',
+      true,
+    );
+    return;
+  }
+
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    AUTH.auth = firebase.auth();
+    AUTH.auth.useDeviceLanguage();
+    AUTH.firebaseReady = true;
+  } catch (error) {
+    toggleSignedInUI(null);
+    setAuthMessage('Failed to initialize authentication. Check your Firebase config.', true);
+    return;
+  }
+
+  AUTH.auth.onAuthStateChanged(user => {
+    toggleSignedInUI(user);
+    setAuthMessage(user ? 'Signed in successfully.' : 'Sign in required to access the games.', false);
+  });
+
+  googleBtn?.addEventListener('click', async () => {
+    if (!AUTH.firebaseReady) return;
+    setAuthMessage('Opening Google sign-in...');
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      await AUTH.auth.signInWithPopup(provider);
+    } catch (error) {
+      setAuthMessage(error?.message || 'Google sign-in failed.', true);
+    }
+  });
+
+  sendOtpBtn?.addEventListener('click', async () => {
+    if (!AUTH.firebaseReady) return;
+    const phone = phoneInput?.value?.trim() || '';
+    if (!/^\+[1-9]\d{7,14}$/.test(phone)) {
+      setAuthMessage('Enter a valid phone number in E.164 format, for example +97798XXXXXXXX.', true);
+      return;
+    }
+
+    try {
+      if (!AUTH.recaptchaVerifier) {
+        AUTH.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('phoneRecaptcha', { size: 'normal' });
+        await AUTH.recaptchaVerifier.render();
+      }
+      setAuthMessage('Sending OTP...');
+      AUTH.confirmationResult = await AUTH.auth.signInWithPhoneNumber(phone, AUTH.recaptchaVerifier);
+      if (otpSection) otpSection.hidden = false;
+      setAuthMessage('OTP sent. Enter the code you received.');
+      otpInput?.focus();
+    } catch (error) {
+      if (AUTH.recaptchaVerifier) {
+        AUTH.recaptchaVerifier.clear();
+        AUTH.recaptchaVerifier = null;
+      }
+      setAuthMessage(error?.message || 'Could not send OTP.', true);
+    }
+  });
+
+  verifyOtpBtn?.addEventListener('click', async () => {
+    const code = otpInput?.value?.trim() || '';
+    if (!AUTH.confirmationResult) {
+      setAuthMessage('Send OTP first.', true);
+      return;
+    }
+    if (!/^\d{6}$/.test(code)) {
+      setAuthMessage('Enter the 6-digit OTP code.', true);
+      return;
+    }
+    setAuthMessage('Verifying OTP...');
+    try {
+      await AUTH.confirmationResult.confirm(code);
+    } catch (error) {
+      setAuthMessage(error?.message || 'OTP verification failed.', true);
+    }
+  });
+
+  signOutBtn?.addEventListener('click', async () => {
+    try {
+      await AUTH.auth.signOut();
+      setAuthMessage('Signed out.');
+    } catch (error) {
+      setAuthMessage(error?.message || 'Sign out failed.', true);
+    }
+  });
+}
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
 const THEME_KEY = 'gz-theme';
@@ -1005,6 +1145,7 @@ function simonBeep(idx) {
    INIT
    ═══════════════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
+  initAuth();
   initTheme();
   initNavigation();
 

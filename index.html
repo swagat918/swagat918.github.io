@@ -13,7 +13,45 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div id="app">
+<section id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <h1>🔐 Sign in to GameZone</h1>
+    <p class="auth-sub">Use Google or phone OTP to unlock all games.</p>
+
+    <button id="googleSignInBtn" class="btn-primary auth-btn" type="button">Continue with Google</button>
+
+    <div class="auth-divider"><span>or</span></div>
+
+    <label class="auth-label" for="phoneInput">Phone number (E.164 format)</label>
+    <input
+      id="phoneInput"
+      class="game-input"
+      type="tel"
+      placeholder="+97798XXXXXXXX"
+      autocomplete="tel"
+      inputmode="tel"
+    />
+    <button id="sendOtpBtn" class="btn-secondary auth-btn" type="button">Send OTP</button>
+
+    <div id="otpSection" hidden>
+      <label class="auth-label" for="otpInput">Enter OTP</label>
+      <input
+        id="otpInput"
+        class="game-input"
+        type="text"
+        placeholder="6-digit code"
+        autocomplete="one-time-code"
+        inputmode="numeric"
+      />
+      <button id="verifyOtpBtn" class="btn-primary auth-btn" type="button">Verify OTP</button>
+    </div>
+
+    <div id="phoneRecaptcha" class="auth-recaptcha"></div>
+    <p id="authMessage" class="auth-message" aria-live="polite"></p>
+  </div>
+</section>
+
+<div id="app" hidden>
 
   <!-- ─── Header ─── -->
   <header id="app-header">
@@ -26,8 +64,10 @@
         </div>
       </button>
       <div class="header-actions">
+        <span id="userBadge" class="user-badge" hidden></span>
         <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle dark/light mode">☀️</button>
         <button id="installBtn" class="icon-btn" hidden aria-label="Install app" title="Install as app">📲</button>
+        <button id="signOutBtn" class="icon-btn" hidden aria-label="Sign out" title="Sign out">🚪</button>
       </div>
     </div>
   </header>
@@ -245,6 +285,8 @@
 <!-- Toast -->
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
